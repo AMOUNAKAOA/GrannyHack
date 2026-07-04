@@ -1,7 +1,7 @@
 #ifndef IMGUISTUFF
 #define IMGUISTUFF
 #include "Fonts/Roboto-Regular.h"
-#include "ImGui/imgui_internal.h"
+#include "imGui/imgui_internal.h"
 static bool init;
 void SetBlackGoldTheme()
 {
