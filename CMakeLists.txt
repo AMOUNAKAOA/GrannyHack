@@ -22,7 +22,7 @@ find_package(OpenGL REQUIRED)
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    # Add ImGui include path
+    # Add ImGui include path (optional)
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui
     # Add any other third-party includes
 )
@@ -34,16 +34,22 @@ file(GLOB_RECURSE SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
 
-# ImGui sources (adjust path as needed)
-set(IMGUI_SOURCES
-    imgui/imgui.cpp
-    imgui/imgui_demo.cpp
-    imgui/imgui_draw.cpp
-    imgui/imgui_widgets.cpp
-    imgui/imgui_tables.cpp
-    imgui/imgui_impl_opengl3.cpp
-    imgui/imgui_impl_android.cpp
-)
+# ImGui sources (only add them if they exist to avoid CMake errors when imgui is not vendored)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp")
+    message(STATUS "Found ImGui sources; including them in the build")
+    set(IMGUI_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_demo.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_widgets.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_tables.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_opengl3.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_android.cpp"
+    )
+else()
+    message(WARNING "ImGui sources not found in ${CMAKE_CURRENT_SOURCE_DIR}/imgui — building without ImGui. If you need ImGui, add it as a submodule or copy the sources into the imgui/ directory.")
+    set(IMGUI_SOURCES "")
+endif()
 
 # Create library or executable
 if(ANDROID)
