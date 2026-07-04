@@ -13,14 +13,14 @@ namespace Menu {
             static int counter = 0;
             static float f;
 
-            ImGui::Begin("Vartora menu"); // Create a window called "Hello, world!" and append into it.
-            ImGui::Text("Thanks Azonyx for this template");               // Display some text (you can use a format strings too)
+            ImGui::Begin("Kebab menu"); // Create a window called "Hello, world!" and append into it.
+            ImGui::Text("First menu ever lol");               // Display some text (you can use a format strings too)
             ImGui::SliderFloat("Speed", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             if (ImGui::Button(
-                    "niggas"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                    "granny count"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
             ImGui::SameLine();
-            ImGui::Text("niggas = %d", counter);
+            ImGui::Text("granny count = %d", counter);
 
             char str1[128] = "Hello, world!";
             ImGui::InputTextWithHint("text input", "enter text here", str1, IM_ARRAYSIZE(str1));
