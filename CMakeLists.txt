@@ -24,6 +24,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     # Add ImGui include path (optional)
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImGui
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ImGui
     # Add any other third-party includes
 )
 
@@ -34,20 +37,35 @@ file(GLOB_RECURSE SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
 
+# Try to locate ImGui directory in common locations (case-sensitive filesystem aware)
+set(POSSIBLE_IMGUI_DIRS
+    "${CMAKE_CURRENT_SOURCE_DIR}/imgui"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ImGui"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/imgui"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/ImGui"
+)
+set(IMGUI_DIR "")
+foreach(dir IN LISTS POSSIBLE_IMGUI_DIRS)
+    if(EXISTS "${dir}/imgui.cpp")
+        set(IMGUI_DIR "${dir}")
+        break()
+    endif()
+endforeach()
+
 # ImGui sources (only add them if they exist to avoid CMake errors when imgui is not vendored)
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp")
-    message(STATUS "Found ImGui sources; including them in the build")
+if(IMGUI_DIR)
+    message(STATUS "Found ImGui in ${IMGUI_DIR}; including ImGui sources in the build")
     set(IMGUI_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_demo.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_widgets.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_tables.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_opengl3.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_android.cpp"
+        "${IMGUI_DIR}/imgui.cpp"
+        "${IMGUI_DIR}/imgui_demo.cpp"
+        "${IMGUI_DIR}/imgui_draw.cpp"
+        "${IMGUI_DIR}/imgui_widgets.cpp"
+        "${IMGUI_DIR}/imgui_tables.cpp"
+        "${IMGUI_DIR}/imgui_impl_opengl3.cpp"
+        "${IMGUI_DIR}/imgui_impl_android.cpp"
     )
 else()
-    message(WARNING "ImGui sources not found in ${CMAKE_CURRENT_SOURCE_DIR}/imgui — building without ImGui. If you need ImGui, add it as a submodule or copy the sources into the imgui/ directory.")
+    message(WARNING "ImGui sources not found in standard locations (imgui/, ImGui/, src/imgui/, src/ImGui/). Building without ImGui. If you need ImGui, add it as a submodule or copy the sources into one of those directories.")
     set(IMGUI_SOURCES "")
 endif()
 
